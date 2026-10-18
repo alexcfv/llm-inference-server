@@ -38,7 +38,7 @@ model:
   inference_batch_size: 32  # размер батча внутри ONNX
 
 server:
-  host: 127.0.0.1
+  host: 0.0.0.0
   port: 8080
   threads: null         # потоки ONNX Runtime (null — все ядра)
   max_batch_size: 128   # максимум текстов в одном HTTP-запросе
