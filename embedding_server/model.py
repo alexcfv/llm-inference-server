@@ -6,19 +6,14 @@ import onnxruntime as ort
 from huggingface_hub import hf_hub_download
 from tokenizers import Tokenizer
 
-DEFAULT_MODEL_ID = "Horizon-Labs/multilingual-embedding-small"
-DEFAULT_MAX_LENGTH = 512
-DEFAULT_BATCH_SIZE = 32
-
-
 class EmbeddingModel:
     def __init__(
         self,
-        model_id: str = DEFAULT_MODEL_ID,
-        model_path: str | None = None,
-        max_length: int = DEFAULT_MAX_LENGTH,
-        batch_size: int = DEFAULT_BATCH_SIZE,
-        num_threads: int | None = None,
+        model_id: str,
+        model_path: str | None,
+        max_length: int,
+        batch_size: int,
+        num_threads: int | None,
     ) -> None:
         self.model_id = model_id
         self.max_length = max_length
