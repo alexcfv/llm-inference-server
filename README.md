@@ -1,11 +1,13 @@
 # LLM Inference Server
 
-Локальный Flask-сервер эмбеддингов для модели
-[Horizon-Labs/multilingual-embedding-small](https://huggingface.co/Horizon-Labs/multilingual-embedding-small)
-(141M, мультиязычная, 1024-мерные L2-нормализованные векторы, совместимые с bge-m3).
-Инференс на ONNX Runtime (int8-квантованная модель, ~269 МБ, CPU).
+Embedding server for my [Profiler](https://github.com/alexcfv/profiler) project —
+it serves text embeddings that Profiler consumes over HTTP.
 
-## Установка
+Runs [Horizon-Labs/multilingual-embedding-small](https://huggingface.co/Horizon-Labs/multilingual-embedding-small)
+(141M params, multilingual, 1024-dimensional L2-normalized vectors, bge-m3 compatible)
+on ONNX Runtime (int8 quantized model, ~269 MB, CPU).
+
+## Installation
 
 ```bash
 python3 -m venv .venv
@@ -13,35 +15,35 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-## Запуск
+## Running
 
 ```bash
 python app.py
 ```
 
-Конфиг по умолчанию — `config.yaml` рядом с `app.py`. Свой путь:
+Default config is `config.yaml` next to `app.py`. Custom path:
 
 ```bash
 python app.py --config /path/to/config.yaml
 ```
 
-При первом запуске модель и токенизатор скачиваются с Hugging Face Hub
-в локальный кэш (~270 МБ).
+On first launch the model and tokenizer are downloaded from Hugging Face Hub
+to the local cache (~270 MB).
 
-### Конфигурация (`config.yaml`)
+### Configuration (`config.yaml`)
 
 ```yaml
 model:
-  id: Horizon-Labs/multilingual-embedding-small  # ID модели на HF Hub
-  path: null            # локальный путь к model_quantized.onnx (null — скачать)
-  max_length: 512       # максимум токенов на текст
-  inference_batch_size: 32  # размер батча внутри ONNX
+  id: Horizon-Labs/multilingual-embedding-small  # HF Hub model ID
+  path: null            # local path to model_quantized.onnx (null — download)
+  max_length: 512       # max tokens per text
+  inference_batch_size: 32  # batch size inside ONNX
 
 server:
   host: 0.0.0.0
   port: 8080
-  threads: null         # потоки ONNX Runtime (null — все ядра)
-  max_batch_size: 128   # максимум текстов в одном HTTP-запросе
+  threads: null         # ONNX Runtime threads (null — all cores)
+  max_batch_size: 128   # max texts per HTTP request
 ```
 
 ## API
@@ -54,15 +56,15 @@ server:
 
 ### `POST /embeddings`
 
-Запрос (строка или список строк):
+Request (a string or a list of strings):
 
 ```bash
 curl -s http://127.0.0.1:8080/embeddings \
   -H 'Content-Type: application/json' \
-  -d '{"input": ["Как высока Эйфелева башня?", "La tour Eiffel mesure 330 mètres."]}'
+  -d '{"input": ["How tall is the Eiffel Tower?", "La tour Eiffel mesure 330 mètres."]}'
 ```
 
-Ответ:
+Response:
 
 ```json
 {
@@ -75,8 +77,8 @@ curl -s http://127.0.0.1:8080/embeddings \
 }
 ```
 
-Векторы L2-нормализованы — косинусная сходство = скалярное произведение.
-Префиксы query/passage не нужны.
+Vectors are L2-normalized — cosine similarity equals dot product.
+No query/passage prefixes are needed.
 
 ```python
 import numpy as np
