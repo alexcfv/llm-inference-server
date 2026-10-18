@@ -42,7 +42,7 @@ model:
 server:
   host: 0.0.0.0
   port: 8080
-  threads: null         # ONNX Runtime threads (null — all cores)
+  threads: null         # threads for ONNX Runtime & waitress (null — 4)
   max_batch_size: 128   # max texts per HTTP request
 ```
 

@@ -1,18 +1,18 @@
-# Модель
+# Model
 model:
   id: Horizon-Labs/multilingual-embedding-small
-  # Локальный путь к model_quantized.onnx; null — скачать с HF Hub
+  # Local path to model_quantized.onnx; null — download from HF Hub
   path: null
-  # Максимум токенов на текст (ограничение модели)
+  # Max tokens per text (model limit)
   max_length: 512
-  # Размер батча при инференсе внутри ONNX
+  # Batch size for ONNX inference
   inference_batch_size: 32
 
-# HTTP-сервер
+# HTTP server
 server:
   host: 0.0.0.0
   port: 8080
-  # Число потоков ONNX Runtime; null — все ядра CPU
+  # Threads for ONNX Runtime and waitress; null — 4
   threads: null
-  # Максимум текстов в одном HTTP-запросе
+  # Max texts per HTTP request
   max_batch_size: 128

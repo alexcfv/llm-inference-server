@@ -1,5 +1,7 @@
 import argparse
 
+from waitress import serve
+
 from embedding_server.api import create_app
 from embedding_server.config import load_config
 from embedding_server.model import EmbeddingModel
@@ -21,7 +23,12 @@ def main() -> None:
         num_threads=cfg.server.threads,
     )
     app = create_app(model, max_batch_size=cfg.server.max_batch_size)
-    app.run(host=cfg.server.host, port=cfg.server.port)
+    serve(
+        app,
+        host=cfg.server.host,
+        port=cfg.server.port,
+        threads=cfg.server.threads or 4,
+    )
 
 
 if __name__ == "__main__":
