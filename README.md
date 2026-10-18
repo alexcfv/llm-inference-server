@@ -19,20 +19,30 @@ pip install -r requirements.txt
 python app.py
 ```
 
+Конфиг по умолчанию — `config.yaml` рядом с `app.py`. Свой путь:
+
+```bash
+python app.py --config /path/to/config.yaml
+```
+
 При первом запуске модель и токенизатор скачиваются с Hugging Face Hub
 в локальный кэш (~270 МБ).
 
-### Переменные окружения
+### Конфигурация (`config.yaml`)
 
-| Переменная | По умолчанию | Описание |
-|---|---|---|
-| `MODEL_ID` | `Horizon-Labs/multilingual-embedding-small` | ID модели на HF Hub |
-| `MODEL_PATH` | — | Локальный путь к `model_quantized.onnx` (пропускает скачивание onnx-файла) |
-| `HOST` | `127.0.0.1` | Адрес |
-| `PORT` | `8080` | Порт |
-| `THREADS` | все ядра | Число потоков ONNX Runtime |
-| `INFERENCE_BATCH_SIZE` | `32` | Размер батча внутри ONNX |
-| `MAX_BATCH_SIZE` | `128` | Максимум текстов в одном запросе |
+```yaml
+model:
+  id: Horizon-Labs/multilingual-embedding-small  # ID модели на HF Hub
+  path: null            # локальный путь к model_quantized.onnx (null — скачать)
+  max_length: 512       # максимум токенов на текст
+  inference_batch_size: 32  # размер батча внутри ONNX
+
+server:
+  host: 127.0.0.1
+  port: 8080
+  threads: null         # потоки ONNX Runtime (null — все ядра)
+  max_batch_size: 128   # максимум текстов в одном HTTP-запросе
+```
 
 ## API
 

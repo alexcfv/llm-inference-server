@@ -1,17 +1,13 @@
-import os
-
 from flask import Flask, jsonify, request
 
 from embedding_server.model import EmbeddingModel
-
-MAX_BATCH_SIZE = int(os.environ.get("MAX_BATCH_SIZE", "128"))
 
 
 def error(message: str, status: int):
     return jsonify({"error": message}), status
 
 
-def create_app(model: EmbeddingModel) -> Flask:
+def create_app(model: EmbeddingModel, max_batch_size: int = 128) -> Flask:
     app = Flask(__name__)
 
     @app.get("/health")
@@ -41,9 +37,9 @@ def create_app(model: EmbeddingModel) -> Flask:
 
         if not texts:
             return error('"input" must not be empty', 400)
-        if len(texts) > MAX_BATCH_SIZE:
+        if len(texts) > max_batch_size:
             return error(
-                f"Too many inputs: {len(texts)} > {MAX_BATCH_SIZE}", 400
+                f"Too many inputs: {len(texts)} > {max_batch_size}", 400
             )
 
         vectors = model.encode(texts)

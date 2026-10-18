@@ -1,23 +1,27 @@
-import os
+import argparse
 
 from embedding_server.api import create_app
-from embedding_server.model import DEFAULT_MODEL_ID, EmbeddingModel
+from embedding_server.config import load_config
+from embedding_server.model import EmbeddingModel
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--config", default="config.yaml", help="Path to YAML config"
+    )
+    args = parser.parse_args()
+
+    cfg = load_config(args.config)
     model = EmbeddingModel(
-        model_id=os.environ.get("MODEL_ID", DEFAULT_MODEL_ID),
-        model_path=os.environ.get("MODEL_PATH"),
-        batch_size=int(os.environ.get("INFERENCE_BATCH_SIZE", "32")),
-        num_threads=(
-            int(os.environ["THREADS"]) if os.environ.get("THREADS") else None
-        ),
+        model_id=cfg.model.id,
+        model_path=cfg.model.path,
+        max_length=cfg.model.max_length,
+        batch_size=cfg.model.inference_batch_size,
+        num_threads=cfg.server.threads,
     )
-    app = create_app(model)
-    app.run(
-        host=os.environ.get("HOST", "127.0.0.1"),
-        port=int(os.environ.get("PORT", "8080")),
-    )
+    app = create_app(model, max_batch_size=cfg.server.max_batch_size)
+    app.run(host=cfg.server.host, port=cfg.server.port)
 
 
 if __name__ == "__main__":
