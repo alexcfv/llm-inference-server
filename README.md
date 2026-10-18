@@ -46,6 +46,22 @@ server:
   max_batch_size: 128   # max texts per HTTP request
 ```
 
+## Run as a systemd service
+
+```bash
+./deploy/setup.sh
+```
+
+The script creates a venv, installs dependencies, generates a systemd unit
+(paths are taken from the repo location), enables and starts the service,
+then waits for `/health` to respond.
+
+```bash
+systemctl status embedding-server   # status
+sudo systemctl restart embedding-server  # restart after config change
+journalctl -u embedding-server -f   # logs
+```
+
 ## API
 
 ### `GET /health`
