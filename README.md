@@ -1,6 +1,6 @@
 # LLM Inference Server
 
-Embedding server for my [Profiler](https://github.com/alexcfv/profiler) project —
+Embedding server for my [Profiler](https://github.com/alexcfv/profiler)(currently private) project —
 it serves text embeddings that Profiler consumes over HTTP.
 
 Runs [Horizon-Labs/multilingual-embedding-small](https://huggingface.co/Horizon-Labs/multilingual-embedding-small)
