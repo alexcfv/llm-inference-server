@@ -1,3 +1,5 @@
+[![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/alexcfv/badge.svg)](https://hub.xerj.org/contributors/alexcfv)
+
 # LLM Inference Server
 
 Embedding server for my [Profiler](https://github.com/alexcfv/profiler)(currently private) project —
